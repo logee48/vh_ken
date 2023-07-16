@@ -9,9 +9,13 @@ label_map = {label:num for num, label in enumerate(actions)}
 sequences, labels = [], []
 
 for action in actions:
+    count = 0
     for sequence in range(no_sequences):
         window = []
+        count += 1
         for frame_num in range(sequence_length):
+            # count +=1
+            print(DATA_PATH,action,frame_num,count)
             res = np.load(os.path.join(DATA_PATH, action, str(sequence), "{}.npy".format(frame_num)))
             window.append(res)
         sequences.append(window)

@@ -3,6 +3,16 @@ from keras.utils import to_categorical
 from keras.models import model_from_json
 from keras.layers import LSTM, Dense
 from keras.callbacks import TensorBoard
+import firebase_admin
+from firebase_admin import db
+import json
+
+
+cred_object = firebase_admin.credentials.Certificate('key.json')
+firebase_admin.initialize_app(cred_object, {
+	'databaseURL':'https://twoo-77302-default-rtdb.asia-southeast1.firebasedatabase.app/'
+	})
+ref = db.reference("/unity_api/test")
 json_file = open("model.json", "r")
 model_json = json_file.read()
 json_file.close()
@@ -42,9 +52,9 @@ with mp_hands.Hands(
         ret, frame = cap.read()
 
         # Make detections
-        cropframe=frame[40:400,0:300]
+        cropframe=frame[40:600,0:500]
         # print(frame.shape)
-        frame=cv2.rectangle(frame,(0,40),(300,400),255,2)
+        frame=cv2.rectangle(frame,(0,40),(500,600),255,2)
         # frame=cv2.putText(frame,"Active Region",(75,25),cv2.FONT_HERSHEY_COMPLEX_SMALL,2,255,2)
         image, results = mediapipe_detection(cropframe, hands)
         # print(results)
@@ -60,6 +70,29 @@ with mp_hands.Hands(
             if len(sequence) == 30:
                 res = model.predict(np.expand_dims(sequence, axis=0))[0]
                 print(actions[np.argmax(res)])
+                print(actions[np.argmax(res)][-3:])
+                if actions[np.argmax(res)][-3:] == "nch":
+                    a = '{"punch":"True","kick":"a","crouch":"a","moveb":"a","movef":"a","stay":"a","superattack":"a"}'
+                    ref.set(json.loads(a))
+                if actions[np.argmax(res)][-3:] == "ick":
+                    a = '{"punch":"a","kick":"True","crouch":"a","moveb":"a","movef":"a","stay":"a","superattack":"a"}'
+                    ref.set(json.loads(a))
+                if actions[np.argmax(res)][-3:] == "uch":
+                    a = '{"punch":"a","kick":"a","crouch":"True","moveb":"a","movef":"a","stay":"a","superattack":"a"}'
+                    ref.set(json.loads(a))
+                if actions[np.argmax(res)][-3:] == "veb":
+                    a = '{"punch":"a","kick":"a","crouch":"a","moveb":"True","movef":"a","stay":"a","superattack":"a"}'
+                    ref.set(json.loads(a))
+                if actions[np.argmax(res)][-3:] == "vef":
+                    a = '{"punch":"a","kick":"a","crouch":"a","moveb":"a","movef":"True","stay":"a","superattack":"a"}'
+                    ref.set(json.loads(a))
+                if actions[np.argmax(res)][-3:] == "tay":
+                    a = '{"punch":"a","kick":"a","crouch":"a","moveb":"a","movef":"a","stay":"True","superattack":"a"}'
+                    ref.set(json.loads(a))
+                if actions[np.argmax(res)][-3:] == "ack":
+                    a = '{"punch":"a","kick":"a","crouch":"a","moveb":"a","movef":"a","stay":"a","superattack":"True"}'
+                    ref.set(json.loads(a))
+                
                 predictions.append(np.argmax(res))
                 
                 

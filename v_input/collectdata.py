@@ -8,7 +8,11 @@ while True:
     count = {
              'a': len(os.listdir(directory+"/punch")),
              'b': len(os.listdir(directory+"/kick")),
-             'c': len(os.listdir(directory+"/crouch"))
+             'c': len(os.listdir(directory+"/crouch")),
+             'd': len(os.listdir(directory+"/moveb")),
+             'e': len(os.listdir(directory+"/movef")),
+             'f': len(os.listdir(directory+"/stay")),
+             'g': len(os.listdir(directory+"/superattack"))
              }
     row = frame.shape[1]
     col = frame.shape[0]
@@ -25,6 +29,14 @@ while True:
         cv2.imwrite(directory+'kick/'+str(count['b'])+'.png',frame)
     if interrupt & 0xFF == ord('c'):
         cv2.imwrite(directory+'crouch/'+str(count['c'])+'.png',frame)
+    if interrupt & 0xFF == ord('d'):
+        cv2.imwrite(directory+'moveb/'+str(count['d'])+'.png',frame)
+    if interrupt & 0xFF == ord('e'):
+        cv2.imwrite(directory+'movef/'+str(count['e'])+'.png',frame)
+    if interrupt & 0xFF == ord('f'):
+        cv2.imwrite(directory+'stay/'+str(count['f'])+'.png',frame)
+    if interrupt & 0xFF == ord('g'):
+        cv2.imwrite(directory+'superattack/'+str(count['g'])+'.png',frame)
 
 cap.release()
 cv2.destroyAllWindows()

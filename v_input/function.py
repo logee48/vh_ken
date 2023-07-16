@@ -33,7 +33,7 @@ def extract_keypoints(results):
         return(np.concatenate([rh]))
         
 DATA_PATH = os.path.join('MP_Data') 
-actions = np.array(['punch','kick','crouch'])
+actions = np.array(['punch','kick','crouch','moveb','movef','stay','superattack'])
 no_sequences = 30
 sequence_length = 30
 
